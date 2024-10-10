@@ -13,7 +13,7 @@ const create = (newObject) => {
 };
 
 const update = (id, changedObject) => {
-  axios.put(`${baseUrl}/${id}`, changedObject);
+  const response = axios.put(`${baseUrl}/${id}`, changedObject);
   return response.then((response) => response.data);
 };
 

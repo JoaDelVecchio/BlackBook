@@ -13,12 +13,33 @@ const App = () => {
   const [newPhone, setNewPhone] = useState("");
   const [filter, setFilter] = useState("");
 
-  const isRepeated = () => {
-    if (persons.some((person) => person.name == newName)) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName("");
-      return true;
+  const isNameRepeated = () => {
+    const repeatedPerson = persons.find(
+      (person) => person.name.toLowerCase() == newName.toLowerCase()
+    );
+    if (repeatedPerson) {
+      if (
+        window.confirm(
+          "Already on the list, u want to replace the phone number?"
+        )
+      ) {
+        personsService
+          .update(repeatedPerson.id, {
+            ...repeatedPerson,
+            number: newPhone,
+          })
+          .then(() => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== repeatedPerson.id
+                  ? person
+                  : { ...repeatedPerson, number: newPhone }
+              )
+            );
+          });
+      }
     }
+    return repeatedPerson;
   };
 
   const handleNewName = (e) => {
@@ -38,9 +59,18 @@ const App = () => {
 
   const handleAddNewName = (e) => {
     e.preventDefault();
-    if (isRepeated()) return;
-    const newPersons = [...persons, { name: newName, phone: newPhone }];
-    setPersons(newPersons);
+    if (!isNameRepeated()) {
+      const newPersons = [
+        ...persons,
+        { name: newName, number: newPhone, id: persons.length + 1 + "" },
+      ];
+      personsService.create({
+        name: newName,
+        number: newPhone,
+        id: persons.length + 1 + "",
+      });
+      setPersons(newPersons);
+    }
     setNewName("");
     setNewPhone("");
   };

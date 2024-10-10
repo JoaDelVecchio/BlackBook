@@ -9,7 +9,9 @@ function Phonebook({ persons, filter, deletePerson, setPersons }) {
         )
         .map((person, index) => (
           <li key={index}>
-            {person.name} {person.phone}
+            <span>
+              {person.name} {person.number}
+            </span>
             <button
               onClick={() => {
                 if (
@@ -24,7 +26,6 @@ function Phonebook({ persons, filter, deletePerson, setPersons }) {
             >
               Delete
             </button>
-            )
           </li>
         ))}
     </ul>
