@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import Phonebook from "./components/Phonebook";
 import PersonForm from "./components/PersonForm";
+import personsService from "./services/persons";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phone: "1168777081" },
-  ]);
+  const [persons, setPersons] = useState([]);
+  useEffect(() => {
+    personsService.getAll().then((data) => setPersons(data));
+  }, []);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [filter, setFilter] = useState("");
@@ -55,7 +57,12 @@ const App = () => {
         newPhone={newPhone}
       />
       <h2>Numbers</h2>
-      <Phonebook persons={persons} filter={filter} />
+      <Phonebook
+        persons={persons}
+        setPersons={setPersons}
+        filter={filter}
+        deletePerson={personsService.deletePerson}
+      />
     </div>
   );
 };

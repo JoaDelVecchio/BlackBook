@@ -1,4 +1,4 @@
-function Phonebook({ persons, filter }) {
+function Phonebook({ persons, filter, deletePerson, setPersons }) {
   return (
     <ul>
       {persons
@@ -10,9 +10,25 @@ function Phonebook({ persons, filter }) {
         .map((person, index) => (
           <li key={index}>
             {person.name} {person.phone}
+            <button
+              onClick={() => {
+                if (
+                  window.confirm(`Are u sure u want to delete ${person.name}?`)
+                ) {
+                  deletePerson(person.id),
+                    setPersons(
+                      persons.filter((person1) => person1.id !== person.id)
+                    );
+                }
+              }}
+            >
+              Delete
+            </button>
+            )
           </li>
         ))}
     </ul>
   );
 }
+
 export default Phonebook;
